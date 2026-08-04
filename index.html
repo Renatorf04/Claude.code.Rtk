@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#12101c">
+  <title>Jogo do Impostor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕵️</text></svg>">
+</head>
+<body>
+
+<main id="app">
+
+  <!-- ═══════════ Configuração ═══════════ -->
+  <section class="tela ativa" id="tela-config">
+    <header class="cabecalho">
+      <h1>🕵️ Jogo do Impostor</h1>
+      <p class="subtitulo">Todo mundo recebe uma palavra. A do impostor é <em>parecida</em> — e nem ele sabe que é o impostor.</p>
+    </header>
+
+    <div class="bloco">
+      <h2>Jogadores</h2>
+      <div class="jogadores-lista" id="jogadores-lista"></div>
+      <div class="linha-botoes">
+        <button type="button" class="btn btn-secundario" id="btn-remover-jogador">− Remover</button>
+        <button type="button" class="btn btn-secundario" id="btn-adicionar-jogador">+ Adicionar</button>
+      </div>
+      <p class="dica" id="dica-jogadores">3 a 8 jogadores.</p>
+    </div>
+
+    <div class="bloco">
+      <h2>Categorias</h2>
+      <div class="categorias-grade" id="categorias-grade"></div>
+      <p class="dica" id="dica-categorias"></p>
+    </div>
+
+    <div class="bloco">
+      <h2>Opções</h2>
+      <label class="opcao">
+        <input type="checkbox" id="opt-cronometro" checked>
+        <span class="opcao-texto">
+          <strong>Cronômetro da discussão</strong>
+          <small>Marca o tempo de conversa depois das dicas.</small>
+        </span>
+      </label>
+      <div class="opcao-detalhe" id="detalhe-cronometro">
+        <label for="opt-minutos">Duração</label>
+        <select id="opt-minutos">
+          <option value="60">1 minuto</option>
+          <option value="120" selected>2 minutos</option>
+          <option value="180">3 minutos</option>
+          <option value="300">5 minutos</option>
+        </select>
+      </div>
+      <label class="opcao">
+        <input type="checkbox" id="opt-chute" checked>
+        <span class="opcao-texto">
+          <strong>Chute final do impostor</strong>
+          <small>Se for descoberto, ele tenta adivinhar a palavra dos outros para roubar a vitória.</small>
+        </span>
+      </label>
+    </div>
+
+    <button type="button" class="btn btn-principal btn-grande" id="btn-comecar">Começar rodada</button>
+    <p class="erro" id="erro-config" hidden></p>
+  </section>
+
+  <!-- ═══════════ Revelação ═══════════ -->
+  <section class="tela" id="tela-revelacao">
+    <p class="etapa">Revelação secreta · <span id="revelacao-contador"></span></p>
+    <h2 class="titulo-passe">Passe o celular para</h2>
+    <p class="nome-destaque" id="revelacao-nome"></p>
+    <p class="instrucao">Ninguém mais pode olhar. Segure o botão para ver sua palavra.</p>
+
+    <button type="button" class="cartao-palavra" id="cartao-palavra">
+      <span class="cartao-oculto" id="cartao-oculto">Segure para ver</span>
+      <span class="cartao-revelado" id="cartao-revelado" hidden>
+        <small>Sua palavra é</small>
+        <strong id="cartao-texto"></strong>
+      </span>
+    </button>
+
+    <button type="button" class="btn btn-principal btn-grande" id="btn-revelacao-proximo" disabled>Já vi, próximo</button>
+  </section>
+
+  <!-- ═══════════ Dicas ═══════════ -->
+  <section class="tela" id="tela-dicas">
+    <p class="etapa">Rodada de dicas</p>
+    <h2>Ordem de fala</h2>
+    <p class="instrucao">Cada um diz <strong>uma palavra só</strong> relacionada à sua. Nada de repetir o que já foi dito.</p>
+    <ol class="ordem-fala" id="ordem-fala"></ol>
+
+    <div class="cronometro" id="cronometro" hidden>
+      <p class="cronometro-tempo" id="cronometro-tempo">2:00</p>
+      <div class="cronometro-barra"><div class="cronometro-preenchimento" id="cronometro-preenchimento"></div></div>
+      <button type="button" class="btn btn-secundario" id="btn-cronometro">Iniciar discussão</button>
+    </div>
+
+    <button type="button" class="btn btn-principal btn-grande" id="btn-ir-votacao">Ir para a votação</button>
+  </section>
+
+  <!-- ═══════════ Votação ═══════════ -->
+  <section class="tela" id="tela-votacao">
+    <p class="etapa">Votação · <span id="votacao-contador"></span></p>
+    <h2 class="titulo-passe">Vez de</h2>
+    <p class="nome-destaque" id="votacao-nome"></p>
+    <p class="instrucao" id="votacao-instrucao">Quem você acha que é o impostor?</p>
+    <div class="voto-opcoes" id="voto-opcoes"></div>
+  </section>
+
+  <!-- ═══════════ Chute final ═══════════ -->
+  <section class="tela" id="tela-chute">
+    <p class="etapa">Chute final</p>
+    <h2 class="titulo-passe">O grupo apontou</h2>
+    <p class="nome-destaque" id="chute-nome"></p>
+    <p class="instrucao">Você era o impostor! Acerte a palavra dos outros jogadores e a vitória é sua.</p>
+    <div class="voto-opcoes" id="chute-opcoes"></div>
+  </section>
+
+  <!-- ═══════════ Resultado ═══════════ -->
+  <section class="tela" id="tela-resultado">
+    <p class="etapa">Resultado da rodada</p>
+    <p class="veredito" id="veredito"></p>
+    <div class="revelacao-final">
+      <p>O impostor era</p>
+      <p class="nome-destaque" id="resultado-impostor"></p>
+      <div class="palavras-finais">
+        <div class="palavra-final">
+          <small>Palavra do grupo</small>
+          <strong id="resultado-palavra-comum"></strong>
+        </div>
+        <div class="palavra-final palavra-final-impostor">
+          <small>Palavra do impostor</small>
+          <strong id="resultado-palavra-impostor"></strong>
+        </div>
+      </div>
+    </div>
+
+    <h3>Votos</h3>
+    <ul class="votos-lista" id="votos-lista"></ul>
+
+    <h3>Placar</h3>
+    <ol class="placar" id="placar"></ol>
+
+    <button type="button" class="btn btn-principal btn-grande" id="btn-nova-rodada">Nova rodada</button>
+    <button type="button" class="btn btn-secundario" id="btn-encerrar">Encerrar partida</button>
+  </section>
+
+</main>
+
+<script src="palavras.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
