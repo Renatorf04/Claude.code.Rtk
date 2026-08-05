@@ -20,7 +20,13 @@ App de **passa-e-joga** para jogar o jogo do impostor com 3 a 8 pessoas (pensado
 - **Impostor escapa** → +2 pontos para o impostor.
 - **Chute final** (opcional, ligado por padrão) → se for descoberto, o impostor escolhe entre 4 palavras; acertando a palavra do grupo, rouba a vitória e leva +2.
 
-O placar acumula entre rodadas. **Nova rodada** mantém jogadores e pontos; **Encerrar partida** zera tudo.
+O placar acumula entre rodadas. **Nova rodada** mantém jogadores e pontos; **Encerrar partida** zera o placar.
+
+## Palavras que não se repetem
+
+São **590 pares em 15 categorias**: Comida, Lugares, Animais, Objetos, Esportes, Profissões, Filmes & Cultura, Famosos, Marcas, Personagens, Música, Tecnologia, Games & Jogos, Cidades & Países e Natureza & Clima.
+
+Cada par sorteado entra num histórico que **sobrevive ao fim da partida** — encerrar o jogo ou fechar o app não faz as palavras voltarem. A tela de configuração mostra quantos pares ainda são inéditos nas categorias marcadas, e só quando eles acabam o rodízio recomeça (apenas para as categorias em uso; o histórico das outras fica intacto). Para recomeçar do zero antes disso, use **↺ Zerar palavras já sorteadas**.
 
 ## Como abrir
 
@@ -41,7 +47,7 @@ python3 -m http.server 8000
 |---|---|
 | `index.html` | Todas as telas do jogo, alternadas por classe CSS |
 | `styles.css` | Tema escuro, layout mobile-first |
-| `palavras.js` | Banco com 140 pares de palavras em 7 categorias |
+| `palavras.js` | Banco com 590 pares de palavras em 15 categorias |
 | `app.js` | Máquina de estados, sorteios, votação, placar e persistência |
 
 Sem build, sem dependências e sem ES modules — por isso funciona até abrindo o arquivo por `file://`. O progresso da rodada fica no `localStorage`, então um refresh acidental não perde o jogo.

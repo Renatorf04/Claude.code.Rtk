@@ -136,22 +136,36 @@
     return lista[Math.floor(Math.random() * lista.length)];
   }
 
-  // Junta os pares de todas as categorias escolhidas, evitando repetir pares
-  // já usados na partida — quando esgotam, a lista de usados recomeça.
-  function sortearPar() {
-    var disponiveis = [];
+  // Todos os pares das categorias escolhidas, separando os que ainda não
+  // saíram. O histórico atravessa partidas: nada se repete até acabar.
+  function acervo() {
     var todos = [];
+    var novos = [];
 
     estado.config.categorias.forEach(function (catId) {
       CATEGORIAS[catId].pares.forEach(function (par, i) {
         var item = { chave: catId + ':' + i, categoriaId: catId, par: par };
         todos.push(item);
-        if (estado.paresUsados.indexOf(item.chave) === -1) disponiveis.push(item);
+        if (estado.paresUsados.indexOf(item.chave) === -1) novos.push(item);
       });
     });
 
+    return { todos: todos, novos: novos };
+  }
+
+  function sortearPar() {
+    var acervoAtual = acervo();
+    var todos = acervoAtual.todos;
+    var disponiveis = acervoAtual.novos;
+
+    // Esgotou o que essas categorias tinham a oferecer: recomeça o rodízio
+    // só delas, preservando o histórico das outras.
     if (!disponiveis.length) {
-      estado.paresUsados = [];
+      var daSelecao = {};
+      todos.forEach(function (item) { daSelecao[item.chave] = true; });
+      estado.paresUsados = estado.paresUsados.filter(function (chave) {
+        return !daSelecao[chave];
+      });
       disponiveis = todos;
     }
 
@@ -247,12 +261,17 @@
   }
 
   function atualizarDicaCategorias() {
-    var total = estado.config.categorias.reduce(function (soma, id) {
-      return soma + CATEGORIAS[id].pares.length;
-    }, 0);
-    $('dica-categorias').textContent = total
-      ? total + ' pares de palavras disponíveis.'
-      : 'Escolha pelo menos uma categoria.';
+    var acervoAtual = acervo();
+    var total = acervoAtual.todos.length;
+    var novos = acervoAtual.novos.length;
+
+    $('dica-categorias').textContent = !total
+      ? 'Escolha pelo menos uma categoria.'
+      : novos === total
+        ? total + ' pares de palavras — nenhum sorteado ainda.'
+        : novos + ' pares inéditos de ' + total + ' (o resto já saiu em outras rodadas).';
+
+    $('btn-zerar-usados').hidden = novos === total;
   }
 
   function renderConfig() {
@@ -659,10 +678,11 @@
       });
   }
 
+  // Zera o placar, mas guarda o histórico de palavras: na próxima partida as
+  // duplas sorteadas continuam sendo inéditas.
   function encerrarPartida() {
     pararCronometro();
     estado.jogadores.forEach(function (jogador) { jogador.pontos = 0; });
-    estado.paresUsados = [];
     estado.rodada = null;
     irPara('config');
   }
@@ -712,6 +732,22 @@
 
     $('opt-chute').addEventListener('change', function () {
       estado.config.chuteFinal = this.checked;
+    });
+
+    $('btn-todas-categorias').addEventListener('click', function () {
+      estado.config.categorias = Object.keys(CATEGORIAS);
+      renderCategorias();
+    });
+
+    $('btn-limpar-categorias').addEventListener('click', function () {
+      estado.config.categorias = [];
+      renderCategorias();
+    });
+
+    $('btn-zerar-usados').addEventListener('click', function () {
+      estado.paresUsados = [];
+      salvar();
+      atualizarDicaCategorias();
     });
 
     $('btn-comecar').addEventListener('click', comecarRodada);
