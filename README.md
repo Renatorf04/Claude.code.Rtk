@@ -4,7 +4,7 @@ App de **passa-e-joga** para jogar o jogo do impostor com 3 a 8 pessoas (pensado
 
 ## Como jogar
 
-1. **Configuração** — digite os nomes, escolha as categorias de palavras e ajuste as opções.
+1. **Configuração** — digite os nomes, escolha as categorias de palavras e decida se quer cronômetro na discussão.
 2. **Revelação** — o celular passa de mão em mão. Cada jogador **segura o botão** para ver sua palavra em segredo e passa adiante.
    - Todos recebem a **mesma palavra**, menos o impostor, que recebe uma **palavra parecida** (ex.: o grupo recebe *praia*, o impostor recebe *piscina*).
    - Ninguém é avisado de que é o impostor — ele só descobre quando o grupo aponta o dedo.
@@ -18,7 +18,6 @@ App de **passa-e-joga** para jogar o jogo do impostor com 3 a 8 pessoas (pensado
 - **Empate na votação** → uma revotação, restrita aos empatados. Empatou de novo, o impostor escapa.
 - **Impostor descoberto** → +1 ponto para cada jogador comum.
 - **Impostor escapa** → +2 pontos para o impostor.
-- **Chute final** (opcional, ligado por padrão) → se for descoberto, o impostor escolhe entre 4 palavras; acertando a palavra do grupo, rouba a vitória e leva +2.
 
 O placar acumula entre rodadas. **Nova rodada** mantém jogadores e pontos; **Encerrar partida** zera o placar.
 

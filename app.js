@@ -1,7 +1,7 @@
 /* Jogo do Impostor — passa-e-joga em um único aparelho.
  *
  * Fluxo de uma rodada:
- *   config → revelacao → dicas → votacao → [chute] → resultado
+ *   config → revelacao → dicas → votacao → resultado
  *
  * O impostor recebe uma palavra parecida com a dos demais e não é avisado de
  * nada: ele só descobre que era o impostor quando o grupo aponta o dedo.
@@ -31,7 +31,6 @@
         categorias: Object.keys(CATEGORIAS),
         cronometro: true,
         segundos: 120,
-        chuteFinal: true,
       },
       paresUsados: [],
       rodada: null,
@@ -50,8 +49,6 @@
       candidatos: null,   // em revotação, quem ainda pode receber voto
       revotacao: false,
       eliminadoIdx: null,
-      opcoesChute: null,
-      chuteCerto: null,
       vencedor: null,     // 'grupo' | 'impostor'
     };
   }
@@ -111,7 +108,6 @@
         categorias: categorias,
         cronometro: salvo.config ? !!salvo.config.cronometro : true,
         segundos: (salvo.config && Number(salvo.config.segundos)) || 120,
-        chuteFinal: salvo.config ? !!salvo.config.chuteFinal : true,
       },
       paresUsados: Array.isArray(salvo.paresUsados) ? salvo.paresUsados : [],
       rodada: salvo.rodada || null,
@@ -278,7 +274,6 @@
     renderJogadores();
     renderCategorias();
     $('opt-cronometro').checked = estado.config.cronometro;
-    $('opt-chute').checked = estado.config.chuteFinal;
     $('opt-minutos').value = String(estado.config.segundos);
     $('detalhe-cronometro').hidden = !estado.config.cronometro;
     $('erro-config').hidden = true;
@@ -524,49 +519,7 @@
     }
 
     rodada.eliminadoIdx = lideres[0];
-
-    if (rodada.eliminadoIdx !== rodada.impostorIdx) return finalizar('impostor');
-    if (estado.config.chuteFinal) return irPara('chute');
-    return finalizar('grupo');
-  }
-
-  // ── Chute final ──────────────────────────────────────────────────────────
-  function renderChute() {
-    var rodada = estado.rodada;
-
-    if (!rodada.opcoesChute) rodada.opcoesChute = montarOpcoesChute();
-    $('chute-nome').textContent = estado.jogadores[rodada.impostorIdx].nome;
-
-    var opcoes = $('chute-opcoes');
-    opcoes.innerHTML = '';
-
-    rodada.opcoesChute.forEach(function (palavra) {
-      var botao = document.createElement('button');
-      botao.type = 'button';
-      botao.className = 'voto-opcao';
-      botao.textContent = palavra;
-      botao.addEventListener('click', function () {
-        rodada.chuteCerto = palavra === rodada.palavraComum;
-        finalizar(rodada.chuteCerto ? 'impostor' : 'grupo');
-      });
-      opcoes.appendChild(botao);
-    });
-  }
-
-  // A palavra certa mais três iscas da mesma categoria.
-  function montarOpcoesChute() {
-    var rodada = estado.rodada;
-    var candidatas = [];
-
-    CATEGORIAS[rodada.categoriaId].pares.forEach(function (par) {
-      par.forEach(function (palavra) {
-        if (palavra !== rodada.palavraComum && palavra !== rodada.palavraImpostor) {
-          candidatas.push(palavra);
-        }
-      });
-    });
-
-    return embaralhar([rodada.palavraComum].concat(embaralhar(candidatas).slice(0, 3)));
+    return finalizar(rodada.eliminadoIdx === rodada.impostorIdx ? 'grupo' : 'impostor');
   }
 
   // ── Resultado ────────────────────────────────────────────────────────────
@@ -604,9 +557,6 @@
   function textoVeredito() {
     var rodada = estado.rodada;
 
-    if (rodada.chuteCerto === true) {
-      return '🎭 Descoberto, mas acertou a palavra do grupo e roubou a vitória!';
-    }
     if (rodada.vencedor === 'grupo') {
       return '🎉 O grupo desmascarou o impostor!';
     }
@@ -700,7 +650,6 @@
       case 'revelacao': renderRevelacao(); break;
       case 'dicas': renderDicas(); break;
       case 'votacao': renderVotacao(); break;
-      case 'chute': renderChute(); break;
       case 'resultado': renderResultado(); break;
       default: renderConfig(); break;
     }
@@ -728,10 +677,6 @@
 
     $('opt-minutos').addEventListener('change', function () {
       estado.config.segundos = Number(this.value);
-    });
-
-    $('opt-chute').addEventListener('change', function () {
-      estado.config.chuteFinal = this.checked;
     });
 
     $('btn-todas-categorias').addEventListener('click', function () {
