@@ -42,6 +42,14 @@
 
     <div class="bloco">
       <h2>Opções</h2>
+      <div class="campo-modo">
+        <span class="campo-rotulo">O impostor recebe</span>
+        <div class="segmentado" id="modo-impostor" role="radiogroup" aria-label="O que o impostor recebe">
+          <button type="button" class="seg" data-modo="parecida" role="radio" aria-checked="true">Palavra parecida</button>
+          <button type="button" class="seg" data-modo="semPalavra" role="radio" aria-checked="false">Nada</button>
+        </div>
+        <p class="dica" id="dica-modo"></p>
+      </div>
       <label class="opcao">
         <input type="checkbox" id="opt-cronometro" checked>
         <span class="opcao-texto">
@@ -74,7 +82,7 @@
     <button type="button" class="cartao-palavra" id="cartao-palavra">
       <span class="cartao-oculto" id="cartao-oculto">Segure para ver</span>
       <span class="cartao-revelado" id="cartao-revelado" hidden>
-        <small>Sua palavra é</small>
+        <small id="cartao-rotulo">Sua palavra é</small>
         <strong id="cartao-texto"></strong>
       </span>
     </button>
@@ -119,7 +127,7 @@
           <small>Palavra do grupo</small>
           <strong id="resultado-palavra-comum"></strong>
         </div>
-        <div class="palavra-final palavra-final-impostor">
+        <div class="palavra-final palavra-final-impostor" id="caixa-palavra-impostor">
           <small>Palavra do impostor</small>
           <strong id="resultado-palavra-impostor"></strong>
         </div>

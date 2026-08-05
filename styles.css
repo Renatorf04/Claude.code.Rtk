@@ -198,6 +198,35 @@ h3 { font-size: 1rem; margin: 28px 0 10px; color: var(--texto-suave); text-trans
 .categoria input { accent-color: var(--destaque); width: 18px; height: 18px; flex: none; }
 .categoria.marcada { border-color: var(--destaque); background: #2f2549; }
 
+/* ── Modo do impostor ────────────────────────────── */
+.campo-modo { padding: 4px 0 14px; border-bottom: 1px solid var(--borda); }
+.campo-rotulo { display: block; font-weight: 600; margin-bottom: 10px; }
+
+.segmentado {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--fundo-bloco-alto);
+  border: 1px solid var(--borda);
+}
+
+.seg {
+  flex: 1;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 8px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--texto-suave);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.seg[aria-checked="true"] { background: var(--destaque); color: #fff; }
+
 /* ── Opções ──────────────────────────────────────── */
 .opcao {
   display: flex;
@@ -256,6 +285,15 @@ h3 { font-size: 1rem; margin: 28px 0 10px; color: var(--texto-suave); text-trans
   border-color: var(--destaque);
   background: linear-gradient(160deg, #34285c, #221d38);
 }
+
+/* No modo sem palavra, o cartão do impostor muda de cor: quem recebe já
+   entende, sem ler, que a rodada dele é outra. */
+.cartao-palavra.aberto.cartao-impostor {
+  border-color: var(--perigo);
+  background: linear-gradient(160deg, #4a1f33, #2a1626);
+}
+
+.cartao-impostor .cartao-revelado strong { font-size: 1.6rem; letter-spacing: 0.02em; }
 
 .cartao-oculto { color: var(--texto-suave); font-size: 1.05rem; letter-spacing: 0.04em; }
 

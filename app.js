@@ -29,6 +29,7 @@
       ],
       config: {
         categorias: Object.keys(CATEGORIAS),
+        modo: 'parecida',   // 'parecida' | 'semPalavra'
         cronometro: true,
         segundos: 120,
       },
@@ -39,6 +40,7 @@
 
   function rodadaInicial() {
     return {
+      modo: 'parecida',   // congelado no início da rodada
       categoriaId: null,
       palavraComum: '',
       palavraImpostor: '',
@@ -106,6 +108,7 @@
       }),
       config: {
         categorias: categorias,
+        modo: (salvo.config && salvo.config.modo === 'semPalavra') ? 'semPalavra' : 'parecida',
         cronometro: salvo.config ? !!salvo.config.cronometro : true,
         segundos: (salvo.config && Number(salvo.config.segundos)) || 120,
       },
@@ -270,9 +273,21 @@
     $('btn-zerar-usados').hidden = novos === total;
   }
 
+  function renderModo() {
+    var botoes = $('modo-impostor').querySelectorAll('.seg');
+    for (var i = 0; i < botoes.length; i++) {
+      botoes[i].setAttribute('aria-checked',
+        botoes[i].dataset.modo === estado.config.modo ? 'true' : 'false');
+    }
+    $('dica-modo').textContent = estado.config.modo === 'semPalavra'
+      ? 'O impostor vê só um aviso e blefa no escuro — nem ele sabe a palavra.'
+      : 'O impostor recebe uma palavra vizinha e nem desconfia que é o impostor.';
+  }
+
   function renderConfig() {
     renderJogadores();
     renderCategorias();
+    renderModo();
     $('opt-cronometro').checked = estado.config.cronometro;
     $('opt-minutos').value = String(estado.config.segundos);
     $('detalhe-cronometro').hidden = !estado.config.cronometro;
@@ -319,9 +334,12 @@
     var par = sortearPar();
     var rodada = rodadaInicial();
 
+    rodada.modo = estado.config.modo;
     rodada.categoriaId = par.categoriaId;
     rodada.palavraComum = par.comum;
-    rodada.palavraImpostor = par.impostor;
+    // No modo sem palavra o impostor não recebe nada: ele sabe que é o
+    // impostor e precisa blefar em cima das dicas dos outros.
+    rodada.palavraImpostor = rodada.modo === 'semPalavra' ? '' : par.impostor;
     rodada.impostorIdx = Math.floor(Math.random() * estado.jogadores.length);
     rodada.ordemFala = sortearOrdemFala(estado.jogadores.length, rodada.impostorIdx);
     rodada.revelacaoIdx = 0;
@@ -334,10 +352,15 @@
   function renderRevelacao() {
     var idx = estado.rodada.revelacaoIdx;
     var total = estado.jogadores.length;
+    var noEscuro = semPalavra(idx);
 
     $('revelacao-contador').textContent = (idx + 1) + ' de ' + total;
     $('revelacao-nome').textContent = estado.jogadores[idx].nome;
-    $('cartao-texto').textContent = palavraDe(idx);
+    $('cartao-rotulo').textContent = noEscuro ? 'Nesta rodada' : 'Sua palavra é';
+    $('cartao-texto').textContent = noEscuro ? '🎭 VOCÊ É O IMPOSTOR' : palavraDe(idx);
+    // A cor só entra junto com a classe .aberto: fechado, o cartão do
+    // impostor é idêntico ao dos outros.
+    $('cartao-palavra').classList.toggle('cartao-impostor', noEscuro);
     fecharCartao();
     $('btn-revelacao-proximo').disabled = true;
     $('btn-revelacao-proximo').textContent =
@@ -348,6 +371,10 @@
     return idx === estado.rodada.impostorIdx
       ? estado.rodada.palavraImpostor
       : estado.rodada.palavraComum;
+  }
+
+  function semPalavra(idx) {
+    return estado.rodada.modo === 'semPalavra' && idx === estado.rodada.impostorIdx;
   }
 
   function abrirCartao() {
@@ -549,6 +576,8 @@
     $('resultado-impostor').textContent = impostor.nome;
     $('resultado-palavra-comum').textContent = rodada.palavraComum;
     $('resultado-palavra-impostor').textContent = rodada.palavraImpostor;
+    // Sem palavra do impostor não há segunda caixa para mostrar.
+    $('caixa-palavra-impostor').hidden = rodada.modo === 'semPalavra';
 
     renderVotos();
     renderPlacar();
@@ -668,6 +697,13 @@
       if (estado.jogadores.length <= MIN_JOGADORES) return;
       estado.jogadores.pop();
       renderJogadores();
+    });
+
+    $('modo-impostor').addEventListener('click', function (e) {
+      var botao = e.target.closest('.seg');
+      if (!botao) return;
+      estado.config.modo = botao.dataset.modo;
+      renderModo();
     });
 
     $('opt-cronometro').addEventListener('change', function () {
