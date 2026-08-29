@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#150a10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nos Dois">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex, nofollow">
+<title>Nós Dois</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9D%A4%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#150a10;
+    --bg2:#1e0d18;
+    --surface:rgba(255,255,255,.055);
+    --surface-2:rgba(255,255,255,.10);
+    --linha:rgba(255,255,255,.12);
+    --texto:#f6eaf0;
+    --suave:#c8a9b9;
+    --rosa:#ff6f9c;
+    --rosa-esc:#c9457d;
+    --ouro:#f2c777;
+    --raio:20px;
+    --sombra:0 18px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    min-height:100dvh;
+    background:
+      radial-gradient(120% 80% at 15% 0%, #3a1226 0%, transparent 55%),
+      radial-gradient(110% 70% at 90% 100%, #2a1030 0%, transparent 60%),
+      linear-gradient(170deg, var(--bg2), var(--bg));
+    background-attachment:fixed;
+    color:var(--texto);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    user-select:none;
+  }
+  #app{
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    max-width:560px;
+    margin:0 auto;
+    padding:calc(env(safe-area-inset-top) + 18px) 20px calc(env(safe-area-inset-bottom) + 20px);
+  }
+  .tela{flex:1;display:flex;flex-direction:column;animation:entra .28s ease both}
+  .tela[hidden]{display:none!important}
+  @keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+  }
+
+  h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.01em}
+  .marca{font-family:Georgia,"Times New Roman",serif;font-size:34px;line-height:1.1}
+  .marca em{font-style:italic;color:var(--rosa)}
+  .sub{color:var(--suave);font-size:15px;margin-top:8px}
+  .topo{display:flex;align-items:center;gap:12px;margin-bottom:18px;min-height:44px}
+  .topo h2{font-size:19px;flex:1}
+  .selo{font-size:12px;color:var(--suave);letter-spacing:.08em;text-transform:uppercase}
+
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;min-height:56px;padding:14px 18px;
+    border-radius:16px;border:1px solid var(--linha);
+    background:var(--surface);
+    font-size:17px;font-weight:600;
+    transition:transform .12s ease, background .2s ease;
+  }
+  .btn:active{transform:scale(.975);background:var(--surface-2)}
+  .btn.primario{
+    background:linear-gradient(135deg,#ff6f9c,#c9457d);
+    border-color:transparent;color:#fff;
+    box-shadow:0 12px 26px rgba(201,69,125,.32);
+  }
+  .btn.ouro{background:linear-gradient(135deg,#f2c777,#d69b3c);border-color:transparent;color:#3a2408}
+  .btn.fantasma{background:transparent;border-color:transparent;color:var(--suave);min-height:48px;font-weight:500}
+  .btn.pequeno{min-height:46px;font-size:15px;padding:10px 14px}
+  .btn .emoji{font-size:20px;line-height:1}
+  .linha-btn{display:flex;gap:10px}
+  .linha-btn .btn{flex:1}
+  .pilha{display:flex;flex-direction:column;gap:12px}
+
+  .campo{margin-bottom:14px}
+  .campo label{display:block;font-size:13px;color:var(--suave);margin-bottom:6px;letter-spacing:.03em}
+  .campo input{
+    width:100%;min-height:52px;padding:12px 16px;font:inherit;
+    color:var(--texto);background:var(--surface);
+    border:1px solid var(--linha);border-radius:14px;outline:none;
+    user-select:text;
+  }
+  .campo input:focus{border-color:var(--rosa)}
+
+  .chips{display:flex;flex-direction:column;gap:12px}
+  .chip{
+    display:flex;align-items:flex-start;gap:14px;text-align:left;
+    width:100%;padding:16px;border-radius:18px;
+    border:1px solid var(--linha);background:var(--surface);
+    transition:border-color .2s ease, background .2s ease, transform .12s ease;
+  }
+  .chip:active{transform:scale(.985)}
+  .chip .marcador{
+    flex:0 0 24px;height:24px;margin-top:2px;border-radius:8px;
+    border:2px solid var(--linha);display:flex;align-items:center;justify-content:center;
+    font-size:14px;color:#fff;
+  }
+  .chip strong{display:block;font-size:17px}
+  .chip span{display:block;font-size:14px;color:var(--suave);margin-top:3px}
+  .chip[aria-pressed="true"]{border-color:var(--rosa);background:rgba(255,111,156,.12)}
+  .chip[aria-pressed="true"] .marcador{background:var(--rosa);border-color:var(--rosa)}
+
+  .carta{
+    flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:28px 22px;margin:6px 0 18px;
+    border-radius:26px;border:1px solid var(--linha);
+    background:linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.035));
+    box-shadow:var(--sombra);
+    min-height:34dvh;
+  }
+  .carta .texto{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:25px;line-height:1.35;
+  }
+  .carta.entrando{animation:vira .35s ease both}
+  @keyframes vira{from{opacity:0;transform:rotateX(12deg) translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+  .etiqueta{
+    display:inline-block;margin-bottom:16px;padding:5px 12px;border-radius:999px;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    background:rgba(255,255,255,.08);color:var(--suave);
+  }
+  .etiqueta.leve{color:#9fe0c4}
+  .etiqueta.intimo{color:#ffb9d2}
+  .etiqueta.picante{color:#ffab7a}
+
+  .vez{text-align:center;margin-bottom:4px}
+  .vez .quem{font-size:20px;font-weight:700}
+  .vez .info{font-size:13px;color:var(--suave)}
+  .contador{text-align:center;font-size:13px;color:var(--suave);margin-top:2px}
+
+  .placar{
+    display:flex;gap:10px;justify-content:center;align-items:center;
+    font-size:14px;color:var(--suave);margin-bottom:14px;
+  }
+  .placar b{color:var(--texto);font-size:17px}
+
+  .lista{display:flex;flex-direction:column;gap:10px;margin:4px 0 16px}
+  .item{
+    display:flex;gap:12px;align-items:flex-start;padding:14px 16px;
+    border-radius:16px;border:1px solid var(--linha);background:var(--surface);
+  }
+  .item p{margin:0;flex:1;font-size:15px;font-family:Georgia,serif}
+  .item .x{flex:0 0 auto;color:var(--suave);font-size:20px;padding:2px 6px}
+  .vazio{text-align:center;color:var(--suave);padding:40px 10px;font-size:15px}
+
+  .rodape{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:14px}
+  .aviso{font-size:13px;color:var(--suave);text-align:center;margin-top:14px;line-height:1.4}
+
+  .modal{
+    position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;
+    background:rgba(8,3,6,.7);backdrop-filter:blur(4px);
+    padding:20px calc(env(safe-area-inset-bottom) + 20px);
+  }
+  .modal[hidden]{display:none!important}
+  .modal .caixa{
+    width:100%;max-width:520px;padding:24px 20px calc(env(safe-area-inset-bottom) + 20px);
+    border-radius:24px;border:1px solid var(--linha);
+    background:linear-gradient(160deg,#2a1220,#1b0c15);
+    box-shadow:var(--sombra);animation:sobe .25s ease both;
+  }
+  @keyframes sobe{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  /* telas baixas (iPhone SE e afins) */
+  @media (max-height: 680px){
+    body{font-size:16px}
+    .marca{font-size:29px}
+    .carta{min-height:24dvh;padding:20px 16px;margin:4px 0 12px}
+    .carta .texto{font-size:21px}
+    .etiqueta{margin-bottom:12px}
+    .btn{min-height:50px}
+    .btn.pequeno{min-height:42px}
+    .chip{padding:13px}
+    .campo{margin-bottom:10px}
+    .campo input{min-height:46px}
+    .sub{font-size:14px}
+    .aviso{font-size:12px}
+    .pilha{gap:10px}
+    .chips{gap:10px}
+  }
+  .modal h3{font-size:20px;margin-bottom:8px}
+  .modal p{color:var(--suave);font-size:15px;margin:0 0 18px}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ======================= INÍCIO ======================= -->
+  <section class="tela" id="tela-inicio">
+    <div style="margin:8px 0 22px">
+      <h1 class="marca">Nós <em>Dois</em></h1>
+      <p class="sub">Um jogo pra vocês se olharem de novo. Sem internet, sem conta, só vocês dois e o celular.</p>
+    </div>
+
+    <div class="campo">
+      <label for="nome1">Quem está segurando o celular</label>
+      <input id="nome1" type="text" placeholder="Seu nome" autocomplete="off" spellcheck="false" maxlength="18">
+    </div>
+    <div class="campo">
+      <label for="nome2">E o amor</label>
+      <input id="nome2" type="text" placeholder="Nome dela(e)" autocomplete="off" spellcheck="false" maxlength="18">
+    </div>
+
+    <div class="pilha" style="margin-top:10px">
+      <button class="btn primario" id="ir-conexao"><span class="emoji">💌</span> Cartas de Conexão</button>
+      <button class="btn" id="ir-vod"><span class="emoji">🎲</span> Verdade ou Desafio</button>
+      <button class="btn fantasma" id="ir-favoritas">♥ Cartas que vocês salvaram (<span id="qtd-fav">0</span>)</button>
+    </div>
+
+    <p class="aviso">Dica: joguem com o celular no meio dos dois, revezando quem responde. Ninguém precisa responder o que não quiser — passar também é uma resposta.</p>
+  </section>
+
+  <!-- ======================= CLIMA ======================= -->
+  <section class="tela" id="tela-clima" hidden>
+    <div class="topo">
+      <button class="btn pequeno" style="width:auto" data-voltar="tela-inicio">←</button>
+      <h2 id="clima-titulo">Qual é o clima de hoje?</h2>
+    </div>
+    <p class="sub" style="margin:-8px 0 18px">Dá pra escolher mais de um. As cartas vêm misturadas.</p>
+
+    <div class="chips">
+      <button class="chip" data-nivel="leve" aria-pressed="false">
+        <span class="marcador">✓</span>
+        <span><strong>Leve 🌤️</strong><span>Memórias, risada e as coisas boas de vocês. Bom pra começar.</span></span>
+      </button>
+      <button class="chip" data-nivel="intimo" aria-pressed="false">
+        <span class="marcador">✓</span>
+        <span><strong>Íntimo 🕯️</strong><span>Conversa de verdade: sentimentos, medos, o que ficou por dizer.</span></span>
+      </button>
+      <button class="chip" data-nivel="picante" aria-pressed="false">
+        <span class="marcador">✓</span>
+        <span><strong>Picante 🔥</strong><span>Desejo e provocação. Só liguem se os dois estiverem a fim.</span></span>
+      </button>
+    </div>
+
+    <div class="rodape">
+      <button class="btn fantasma" id="trocar-comeca">🔁 Quem começa: <span id="quem-comeca">—</span></button>
+      <button class="btn primario" id="comecar">Começar</button>
+    </div>
+  </section>
+
+  <!-- ======================= CARTAS DE CONEXÃO ======================= -->
+  <section class="tela" id="tela-cartas" hidden>
+    <div class="topo">
+      <button class="btn pequeno" style="width:auto" data-voltar="tela-inicio">←</button>
+      <span class="selo">Cartas de Conexão</span>
+    </div>
+
+    <div class="vez">
+      <div class="quem" id="cartas-quem">—</div>
+      <div class="info">responde essa</div>
+    </div>
+
+    <div class="carta" id="carta-conexao">
+      <span class="etiqueta" id="carta-nivel">leve</span>
+      <div class="texto" id="carta-texto">…</div>
+    </div>
+
+    <div class="linha-btn" style="margin-bottom:10px">
+      <button class="btn pequeno" id="fav-conexao">♥ Salvar</button>
+      <button class="btn pequeno" id="pular-conexao">Pular</button>
+    </div>
+    <button class="btn primario" id="proxima-conexao">Próxima carta</button>
+    <div class="contador" id="contador-conexao"></div>
+  </section>
+
+  <!-- ======================= VERDADE OU DESAFIO ======================= -->
+  <section class="tela" id="tela-vod" hidden>
+    <div class="topo">
+      <button class="btn pequeno" style="width:auto" data-voltar="tela-inicio">←</button>
+      <span class="selo">Verdade ou Desafio</span>
+    </div>
+
+    <div class="placar">
+      <span id="placar-1">—</span><b id="placar-n1">0</b>
+      <span style="opacity:.4">×</span>
+      <b id="placar-n2">0</b><span id="placar-2">—</span>
+    </div>
+
+    <div class="vez">
+      <div class="quem" id="vod-quem">—</div>
+      <div class="info" id="vod-info">escolhe: verdade ou desafio?</div>
+    </div>
+
+    <div class="carta" id="carta-vod">
+      <span class="etiqueta" id="vod-etiqueta" hidden></span>
+      <div class="texto" id="vod-texto">Toque em uma das opções abaixo 👇</div>
+    </div>
+
+    <div id="vod-escolha" class="pilha">
+      <div class="linha-btn">
+        <button class="btn primario" data-tipo="verdade">Verdade</button>
+        <button class="btn ouro" data-tipo="desafio">Desafio</button>
+      </div>
+      <button class="btn fantasma" id="vod-sorteio">🎲 Sorteia por mim</button>
+    </div>
+
+    <div id="vod-resultado" class="pilha" hidden>
+      <div class="linha-btn">
+        <button class="btn pequeno" id="fav-vod">♥ Salvar</button>
+        <button class="btn pequeno" id="vod-passou">Passei 😅</button>
+      </div>
+      <button class="btn primario" id="vod-cumpriu">Cumpri! Próxima vez</button>
+    </div>
+    <div class="contador" id="contador-vod"></div>
+    <button class="btn fantasma pequeno" id="zerar-placar" style="min-height:38px;font-size:13px">Zerar placar</button>
+  </section>
+
+  <!-- ======================= FAVORITAS ======================= -->
+  <section class="tela" id="tela-favoritas" hidden>
+    <div class="topo">
+      <button class="btn pequeno" style="width:auto" data-voltar="tela-inicio">←</button>
+      <h2>Cartas salvas</h2>
+    </div>
+    <div class="lista" id="lista-favoritas"></div>
+    <div class="rodape">
+      <button class="btn fantasma" data-voltar="tela-inicio">Voltar</button>
+    </div>
+  </section>
+
+  <!-- ======================= FIM DO BARALHO ======================= -->
+  <section class="tela" id="tela-fim" hidden>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">
+      <div style="font-size:52px">🌙</div>
+      <h2 style="font-size:24px;margin:14px 0 8px">Acabaram as cartas desse clima</h2>
+      <p class="sub" id="fim-texto">Vocês passaram por todas. Dá pra embaralhar de novo ou mudar o clima.</p>
+    </div>
+    <div class="rodape">
+      <button class="btn primario" id="fim-reembaralhar">Embaralhar e jogar de novo</button>
+      <button class="btn" id="fim-clima">Mudar o clima</button>
+      <button class="btn fantasma" data-voltar="tela-inicio">Voltar ao início</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ======================= MODAL ======================= -->
+<div class="modal" id="modal" hidden>
+  <div class="caixa">
+    <h3 id="modal-titulo">Título</h3>
+    <p id="modal-texto">Texto</p>
+    <div class="pilha">
+      <button class="btn primario" id="modal-ok">Confirmar</button>
+      <button class="btn fantasma" id="modal-cancelar">Agora não</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ==========================================================================
+   BARALHOS — é só editar/adicionar frases nas listas abaixo.
+   ========================================================================== */
+const CARTAS = {
+  conexao: {
+    leve: [
+      'Qual foi a primeira coisa que você reparou em mim?',
+      'Conta uma lembrança nossa que te faz sorrir sozinho(a) quando lembra.',
+      'Qual música te lembra a gente? Coloca pra tocar agora.',
+      'Se a gente pudesse repetir um dia inteiro que já vivemos, qual dia você escolheria?',
+      'Em que momento você percebeu que estava a fim de mim de verdade?',
+      'Qual mania minha você acha engraçada?',
+      'Qual foi o nosso melhor passeio até hoje? Por quê?',
+      'Se a gente ganhasse um fim de semana livre agora, o que você ia querer fazer?',
+      'Que comida te lembra a gente?',
+      'Qual foi a última vez que eu te fiz rir muito? Lembra do motivo?',
+      'Qual apelido que eu te dou você mais gosta?',
+      'Como você descreveria a gente pra alguém que não nos conhece?',
+      'Qual foto nossa é a sua favorita? Descreve ela sem olhar.',
+      'Qual gesto meu você guarda até hoje?',
+      'O que você sente falta de fazer comigo e a gente fazia mais no começo?',
+      'Que série ou filme você quer maratonar comigo?',
+      'Se a nossa história virasse playlist, qual seria a primeira música?',
+      'Qual dia da semana você mais gosta de estar comigo? Por quê?',
+      'Qual lugar da cidade é nosso?',
+      'Se eu fosse um cheiro, qual eu seria?',
+      'O que você falou de mim pros seus amigos no comecinho?',
+      'Qual foi a primeira mensagem que você lembra de ter me mandado?',
+      'Manhã de preguiça comigo ou madrugada acordados? Por quê?',
+      'Qual foi o momento mais bobo e feliz que a gente já viveu junto?',
+      'Que pequeno hábito nosso você não quer perder nunca?',
+      'O que te dá segurança em mim?',
+      'Se a gente adotasse um bichinho hoje, qual seria e que nome teria?',
+      'Que coisa simples que eu faço melhora o seu dia?',
+      'Como é o seu domingo perfeito comigo?',
+      'Que lugar você quer muito conhecer comigo?',
+      'O que você acha que a gente faz melhor do que a maioria dos casais?',
+      'Quando foi a última vez que você sentiu orgulho de mim?',
+      'Se você pudesse congelar um momento nosso e viver nele um dia inteiro, qual seria?',
+      'Que detalhe meu você reconhece de longe?',
+      'Qual foi o nosso melhor programa barato?',
+      'Você prefere que eu te surpreenda ou que a gente planeje junto?',
+      'O que você diria pra você mesmo(a) no dia em que a gente se conheceu?',
+      'Que história nossa você mais conta pros outros?',
+      'O que você quer que a gente faça mais vezes nos próximos meses?',
+      'Descreve o nosso amor em três palavras — e explica uma delas.'
+    ],
+    intimo: [
+      'Do que você sente falta em mim ultimamente?',
+      'Tem alguma coisa que você queria me dizer e ainda não disse?',
+      'Quando foi a última vez que você se sentiu sozinho(a) mesmo estando comigo?',
+      'O que te machuca com facilidade sem eu perceber?',
+      'Do que você tem medo quando pensa na gente?',
+      'Em que momento você mais precisou de mim e eu não vi?',
+      'O que eu faço que te faz sentir amado(a) de verdade?',
+      'Qual foi a nossa discussão mais difícil e o que você aprendeu com ela?',
+      'Tem algo que você já me perdoou e nunca me contou?',
+      'O que você acha que eu ainda não sei sobre você?',
+      'Você se sente mais amado(a) por palavras, tempo junto, toque, gestos ou presentes? Explica.',
+      'O que mudou em você desde que a gente está junto?',
+      'Que parte de você tem medo de não ser aceita por mim?',
+      'Quando você imagina a gente daqui a cinco anos, o que você vê?',
+      'O que você precisa de mim numa semana ruim?',
+      'Qual foi a coisa mais corajosa que você já fez por nós?',
+      'Quando foi a última vez que você chorou por causa da gente — de tristeza ou de amor?',
+      'Tem alguma expectativa sua sobre mim que talvez não seja justa?',
+      'O que faz você confiar em mim?',
+      'Qual é o assunto que a gente evita e precisa conversar?',
+      'O que você mais admira em mim e nunca disse em voz alta?',
+      'Tem alguma coisa da minha família ou dos meus amigos que te incomoda?',
+      'Como você quer envelhecer comigo?',
+      'Você acha que a gente se escuta de verdade? Onde a gente falha?',
+      'O que você faria diferente se pudesse voltar ao começo da gente?',
+      'Que sonho seu você quer que eu segure junto com você?',
+      'Do que você sente vergonha de precisar?',
+      'Quando você se sente mais distante de mim?',
+      'Que promessa você quer me fazer hoje?',
+      'O que a rotina roubou da gente?',
+      'Como eu poderia te apoiar melhor no que você está vivendo agora?',
+      'O que você ainda não superou e talvez eu ache que já passou?',
+      'Qual momento nosso te deu certeza de que era comigo?',
+      'Se eu pudesse mudar uma coisa em mim pra te fazer bem, o que você pediria?',
+      'O que você quer que eu nunca deixe de fazer?',
+      'Você consegue ser inteiro(a) do meu lado? O que ainda falta?',
+      'Que medo antigo seu ainda aparece na nossa relação?',
+      'O que hoje é mais difícil pra você do que era no começo da gente?',
+      'Se hoje fosse o nosso último dia juntos, o que você ia querer ter dito?',
+      'Diz uma coisa que você quer ouvir de mim mais vezes — e por quê.'
+    ],
+    picante: [
+      'O que eu faço que te deixa com vontade sem nem perceber?',
+      'Qual foi a nossa primeira vez mais marcante? Conta do seu jeito.',
+      'Que parte do meu corpo você olha primeiro?',
+      'Tem alguma fantasia que você nunca me contou?',
+      'Você prefere de manhã, de tarde ou de madrugada? Por quê?',
+      'Que roupa minha te desconcentra?',
+      'O que você quer que eu faça bem mais devagar?',
+      'Onde você sempre quis me beijar e ainda não beijou?',
+      'Qual foi o beijo nosso mais inesquecível?',
+      'Tem algo que a gente já fez e você quer repetir hoje?',
+      'O que te excita e não tem nada a ver com sexo?',
+      'Você prefere ser provocado(a) por palavra, olhar ou toque?',
+      'Que lugar nada óbvio do seu corpo você quer que eu descubra?',
+      'Qual mensagem minha mais te acendeu?',
+      'O que você gostaria de ouvir de mim no ouvido?',
+      'Você prefere conduzir ou ser conduzido(a)?',
+      'Tem algo que você tem curiosidade de experimentar comigo?',
+      'Quando foi que você mais me desejou fora de casa?',
+      'O que faz você se sentir desejado(a) por mim?',
+      'Tem algum limite seu que eu preciso saber?',
+      'O que te deixa mais louco(a): a antecipação ou a surpresa?',
+      'Como seria uma noite perfeita nossa, do começo ao fim?',
+      'Que carinho meu você quer que dure mais tempo?',
+      'Tem alguma coisa que a gente parou de fazer e você sente falta?',
+      'Qual foi a vez em que você mais se soltou comigo?',
+      'Se a gente tivesse um quarto de hotel só nosso por 24 horas, qual seria a primeira coisa?',
+      'O que você quer que eu peça pra você fazer?',
+      'Que detalhe do seu corpo você queria que eu elogiasse mais?',
+      'O que te deixa à vontade pra pedir o que você quer?',
+      'Fala uma coisa que você quer de mim hoje à noite.'
+    ]
+  },
+  verdade: {
+    leve: [
+      'Qual foi a última mentirinha boba que você me contou?',
+      'Você já mexeu no meu celular sem eu saber?',
+      'Qual presente meu você fingiu ter amado?',
+      'Que mania minha te irrita um pouquinho?',
+      'Já cancelou um programa comigo por preguiça e inventou desculpa?',
+      'Qual foi a coisa mais ridícula que você já fez pra me impressionar?',
+      'Você me stalkeou nas redes antes da gente ficar? Até onde foi?',
+      'Qual foi o pior conselho que já te deram sobre a gente?',
+      'Você tem alguma foto minha guardada que eu não sei?',
+      'Quando foi a última vez que você falou de mim pros seus amigos? O que disse?',
+      'Eu já falei alguma coisa engraçada dormindo? Conta.',
+      'Que comida que eu faço ou peço você não gosta de verdade?',
+      'Você lembra da roupa que eu estava no nosso primeiro encontro?',
+      'Que episódio você assistiu sem mim mesmo prometendo esperar?',
+      'Você já chorou vendo algo bobo e escondeu de mim?',
+      'Qual foi o meu maior mico na sua frente?',
+      'Sair ou ficar em casa comigo? Fala a verdade.',
+      'Você já demorou de propósito pra responder minha mensagem?',
+      'Já se fez de desentendido(a) pra escapar de uma tarefa de casa?',
+      'Qual apelido meu você acha bobo?',
+      'Tem alguma foto nossa que você não gostou e nunca postou?',
+      'Você já contou algo nosso pra alguém e se arrependeu?',
+      'Qual foi a última coisa que você comprou escondido de mim?',
+      'Você já fingiu estar dormindo pra eu não te chamar? Quando?',
+      'Qual foi a coisa mais boba pela qual a gente já brigou?'
+    ],
+    intimo: [
+      'O que você sentiu de verdade na última vez que a gente brigou?',
+      'Tem algo meu que você teme que nunca mude?',
+      'Você já pensou em desistir da gente? Quando?',
+      'O que você não me conta pra não me magoar?',
+      'Quando foi a última vez que você se sentiu inseguro(a) comigo?',
+      'Tem alguém do meu convívio de quem você tem ciúmes?',
+      'O que você mais teme que eu descubra sobre você?',
+      'Você se sente a sua melhor versão do meu lado? Onde não se sente?',
+      'O que você precisa que eu pare de fazer?',
+      'Qual foi a vez em que você mais se orgulhou de nós dois?',
+      'Você acha que eu te escuto de verdade?',
+      'Que assunto meu você já cansou de ouvir e nunca falou?',
+      'O que você tem medo de me pedir?',
+      'Que pedaço da sua história você ainda não me contou inteiro?',
+      'Você guarda alguma mágoa nossa?',
+      'Como você se sente quando eu fico no celular do seu lado?',
+      'Tem algum sonho seu que você acha que eu atrapalho?',
+      'O que você faria se eu sumisse por uma semana sem explicação?',
+      'Qual foi a coisa mais difícil que você já engoliu por mim?',
+      'O que você quer que eu entenda sobre você de uma vez por todas?',
+      'Você sente que a gente é prioridade um do outro hoje?',
+      'O que mudou no seu jeito de me amar do começo pra cá?',
+      'Você já comparou a gente com outro casal? Em quê?',
+      'Que conversa você está adiando comigo?',
+      'Se você pudesse apagar uma noite nossa, qual seria?'
+    ],
+    picante: [
+      'Quando foi a última vez que você pensou em mim de um jeito nada inocente?',
+      'Você pensou em mim desse jeito hoje? Em que hora?',
+      'Que fantasia passou pela sua cabeça recentemente?',
+      'Que parte do meu corpo você acha mais gostosa?',
+      'Já teve vontade de me agarrar num lugar público? Onde?',
+      'Que roupa você quer me ver usando?',
+      'O que você nunca teve coragem de me pedir na cama?',
+      'Qual foi a nossa noite mais inesquecível?',
+      'Rápido e intenso ou devagar e demorado?',
+      'Já escreveu uma mensagem safada pra mim e apagou antes de enviar?',
+      'Qual foi o momento mais arriscado que a gente já viveu junto?',
+      'O que te deixa louco(a) e eu talvez nem saiba?',
+      'Você prefere me ver ou ser visto(a) por mim?',
+      'Tem alguma palavra ou som meu que te acende na hora?',
+      'Que lugar da casa você quer estrear comigo?',
+      'O que você faria comigo se a casa fosse só nossa agora?',
+      'Quando foi a última vez que você me desejou e não falou nada?',
+      'Tem algo que você acha que eu não ia gostar e quer testar?',
+      'Luz acesa ou apagada? Por quê?',
+      'Que carinho meu te deixa mole na hora?',
+      'O que você mais gosta de fazer comigo antes de qualquer coisa acontecer?',
+      'Tem alguma cena de filme ou série que te lembra a gente?',
+      'O que você quer ouvir de mim quando a gente está sozinho?',
+      'Qual foi o flerte mais safado que você já me fez?',
+      'De 0 a 10, quanto você está a fim de mim agora — e por quê?'
+    ]
+  },
+  desafio: {
+    leve: [
+      'Abrace {p} por 30 segundos, em silêncio.',
+      'Diga três coisas que você admira em {p}, olhando nos olhos.',
+      'Faça uma imitação de {p}. Vale exagerar.',
+      'Mostre a última foto da sua galeria e explique.',
+      'Cante um pedaço da música que lembra vocês dois.',
+      'Faça uma massagem de 1 minuto nos ombros de {p}.',
+      'Escreva um bilhete de uma frase e entregue agora.',
+      'Segure a mão de {p} até o fim da próxima rodada.',
+      'Mande uma mensagem agora dizendo o que você está sentindo.',
+      'Conte uma memória de vocês em 30 segundos, sem parar de falar.',
+      'Faça um elogio a uma parte do corpo de {p}.',
+      'Dance 30 segundos com {p}, mesmo sem música.',
+      'Escolha uma música, coloque pra tocar e diga por que escolheu.',
+      'Faça carinho no cabelo de {p} por 1 minuto.',
+      'Diga eu te amo de três jeitos diferentes.',
+      'Olhe nos olhos de {p} por 1 minuto sem falar nada.',
+      'Descreva o dia em que vocês se conheceram como se fosse cena de filme.',
+      'Faça um pedido simples pra hoje — e {p} tem que atender.',
+      'Dê um beijo na testa e diga uma coisa boa no ouvido.',
+      'Combinem agora um encontro pra esta semana e marquem no celular.',
+      'Desenhe vocês dois em 60 segundos e mostre.',
+      'Agradeça por três coisas que {p} fez essa semana.',
+      'Conte uma coisa que você aprendeu com {p}.',
+      'Tirem uma selfie agora, do jeito mais bobo possível.',
+      'Invente um apelido novo e use até o jogo acabar.'
+    ],
+    intimo: [
+      'Olhe nos olhos de {p} e diga o que você mais teme perder.',
+      'Peça desculpas por algo que ficou pendente entre vocês.',
+      'Diga uma coisa que você precisa e nunca pediu.',
+      'Conte um medo seu que {p} ainda não conhece.',
+      'Encostem as testas e respirem juntos por 1 minuto.',
+      'Faça uma promessa realista pro próximo mês.',
+      'Conte o momento em que você mais se sentiu amado(a) por {p}.',
+      'Fale de uma mágoa antiga sem acusar — só conte como você se sentiu.',
+      'Peça um perdão que você acha que ainda não recebeu.',
+      'Descreva em voz alta o futuro de vocês daqui a cinco anos.',
+      'Segure o rosto de {p} e diga por que você escolheu ficar.',
+      'Conte a vez em que você quase desistiu e por que não desistiu.',
+      'Diga uma coisa que você quer mudar em você por vocês dois.',
+      'Peça o abraço exato de que você precisa agora e explique como.',
+      'Fale de algo que você esconde por vergonha.',
+      'Escreva no celular uma mensagem pra {p} ler daqui a um mês.',
+      'Conte o que você sentiu na primeira vez que disse eu te amo.',
+      'Diga o que a rotina tirou de vocês e proponha uma mudança concreta.',
+      'Peça um conselho sobre algo que você está carregando sozinho(a).',
+      'Fale de um sonho seu que depende do apoio de {p}.',
+      'Diga o que você faria se soubesse que só tem mais um ano com {p}.',
+      'Assuma um ciúme que você nunca admitiu.',
+      'Agradeça por algo que {p} fez e nunca foi reconhecido.',
+      'Fale uma verdade difícil com cuidado — e depois escute sem interromper.',
+      'Criem agora um ritual semanal de vocês dois e definam o dia.'
+    ],
+    picante: [
+      'Beije o pescoço de {p} por 15 segundos.',
+      'Sussurre no ouvido de {p} o que você quer fazer mais tarde.',
+      'Faça uma massagem nas costas por 2 minutos, sem pressa.',
+      'Beijem-se como se fosse a primeira vez de vocês.',
+      'Tire uma peça de roupa escolhida por {p}.',
+      'Deixe {p} escolher onde você vai dar o próximo beijo.',
+      'Descreva uma fantasia sua em detalhes por 60 segundos.',
+      'Faça carinho onde {p} pedir, por 1 minuto.',
+      'Mande uma mensagem safada agora, mesmo estando do lado.',
+      'Beije devagar por 30 segundos sem usar as mãos.',
+      'Escolha uma música e dance pra {p} por 20 segundos.',
+      '{p} fecha os olhos e você conduz os próximos 60 segundos.',
+      'Diga três coisas que você quer que {p} faça com você.',
+      'Provoque só com o olhar por 30 segundos, sem encostar.',
+      'Beije a mão de {p} e vá subindo pelo braço até onde quiser.',
+      'Sente no colo de {p} e conte o que está passando pela sua cabeça.',
+      'Peça uma coisa agora — {p} decide se aceita.',
+      'Escolha uma parte do corpo de {p} e elogie com detalhes.',
+      'Faça em {p}, por 1 minuto, o que você mais gosta de receber.',
+      'Descreva como você quer ser beijado(a) e deixe {p} executar.',
+      'Cubra os olhos de {p} e faça três toques diferentes pra {p} adivinhar.',
+      'Diga em voz alta o que você quer que aconteça quando o jogo acabar.',
+      'Beijem-se em silêncio, sem pressa, até um dos dois pedir mais.',
+      'Mostre onde você quer ser tocado(a) agora.',
+      'Marquem agora um encontro proibido pra esta semana: hora e lugar.'
+    ]
+  }
+};
+</script>
+<script>
+/* ==========================================================================
+   LÓGICA DO JOGO
+   ========================================================================== */
+(function(){
+  'use strict';
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.prototype.slice.call(r.querySelectorAll(s));
+  const CHAVE = 'nosdois.v1';
+  const NIVEIS = ['leve','intimo','picante'];
+  const ROTULO = {leve:'Leve', intimo:'Íntimo', picante:'Picante', verdade:'Verdade', desafio:'Desafio'};
+
+  /* ---------- estado ---------- */
+  const PADRAO = {
+    nomes:['',''], comeca:0, vez:0, modo:'conexao',
+    niveis:['leve'], picanteOk:false,
+    progresso:{}, favoritas:[], placar:[0,0]
+  };
+
+  function carregar(){
+    let guardado = {};
+    try { guardado = JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch(e){}
+    const s = Object.assign({}, PADRAO, guardado);
+    if(!Array.isArray(s.nomes) || s.nomes.length !== 2) s.nomes = ['',''];
+    s.niveis = Array.isArray(s.niveis) ? s.niveis.filter(n => NIVEIS.indexOf(n) >= 0) : [];
+    if(!s.niveis.length) s.niveis = ['leve'];
+    if(!Array.isArray(s.favoritas)) s.favoritas = [];
+    if(!Array.isArray(s.placar) || s.placar.length !== 2) s.placar = [0,0];
+    if(!s.progresso || typeof s.progresso !== 'object') s.progresso = {};
+    s.vez = s.vez ? 1 : 0;
+    s.comeca = s.comeca ? 1 : 0;
+    return s;
+  }
+  function salvar(){ try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch(e){} }
+
+  const S = carregar();
+
+  /* ---------- utilidades ---------- */
+  const vib = (ms) => { try { if(navigator.vibrate) navigator.vibrate(ms || 10); } catch(e){} };
+  const nome = (i) => (S.nomes[i] || '').trim() || (i === 0 ? 'Você' : 'Amor');
+  const comNome = (texto, quemFaz) => texto.replace(/\{p\}/g, nome(1 - quemFaz));
+
+  function embaralhar(a){
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function mostrar(id){
+    $$('.tela').forEach(t => { t.hidden = (t.id !== id); });
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- baralhos ---------- */
+  function niveisOrdenados(){ return S.niveis.slice().sort(); }
+  function chave(tipo){ return tipo + '|' + niveisOrdenados().join('+'); }
+
+  function baralho(tipo){
+    const fora = [];
+    niveisOrdenados().forEach(function(n){
+      (CARTAS[tipo][n] || []).forEach(function(texto){
+        fora.push({texto: texto, nivel: n, tipo: tipo});
+      });
+    });
+    return fora;
+  }
+
+  function estado(tipo){
+    const k = chave(tipo);
+    const b = baralho(tipo);
+    let e = S.progresso[k];
+    if(!e || e.total !== b.length || !Array.isArray(e.ordem) || e.ordem.length !== b.length){
+      e = S.progresso[k] = {total: b.length, ordem: embaralhar(b.map(function(_, i){ return i; })), i: 0};
+    }
+    return {e: e, b: b};
+  }
+
+  function puxar(tipo){
+    const st = estado(tipo);
+    if(st.e.i >= st.e.ordem.length) return null;
+    const carta = st.b[st.e.ordem[st.e.i]];
+    st.e.i++;
+    salvar();
+    return carta;
+  }
+
+  function reembaralhar(tipo){
+    const st = estado(tipo);
+    st.e.ordem = embaralhar(st.b.map(function(_, i){ return i; }));
+    st.e.i = 0;
+    salvar();
+  }
+
+  function contagem(tipo){
+    const st = estado(tipo);
+    return {atual: st.e.i, total: st.e.total};
+  }
+
+  /* ---------- favoritas ---------- */
+  const idFav = (c) => c.tipo + '|' + c.texto;
+  const ehFav = (c) => !!c && S.favoritas.some(function(f){ return idFav(f) === idFav(c); });
+
+  function alternarFav(carta, botao){
+    if(!carta) return;
+    const i = S.favoritas.findIndex(function(f){ return idFav(f) === idFav(carta); });
+    if(i >= 0) S.favoritas.splice(i, 1);
+    else S.favoritas.push({texto: carta.texto, nivel: carta.nivel, tipo: carta.tipo});
+    salvar();
+    vib();
+    if(botao) botao.textContent = ehFav(carta) ? '♥ Salva' : '♥ Salvar';
+    $('#qtd-fav').textContent = S.favoritas.length;
+  }
+
+  function pintarFavoritas(){
+    const lista = $('#lista-favoritas');
+    lista.innerHTML = '';
+    if(!S.favoritas.length){
+      const vazio = document.createElement('div');
+      vazio.className = 'vazio';
+      vazio.textContent = 'Nada salvo ainda. Durante o jogo, toque em ♥ Salvar nas cartas que valem a pena voltar.';
+      lista.appendChild(vazio);
+      return;
+    }
+    S.favoritas.slice().reverse().forEach(function(f){
+      const item = document.createElement('div');
+      item.className = 'item';
+      const p = document.createElement('p');
+      p.textContent = comNome(f.texto, 0);
+      const x = document.createElement('button');
+      x.className = 'x';
+      x.type = 'button';
+      x.setAttribute('aria-label', 'Remover');
+      x.textContent = '×';
+      x.addEventListener('click', function(){
+        const i = S.favoritas.findIndex(function(g){ return idFav(g) === idFav(f); });
+        if(i >= 0) S.favoritas.splice(i, 1);
+        salvar();
+        $('#qtd-fav').textContent = S.favoritas.length;
+        pintarFavoritas();
+      });
+      item.appendChild(p);
+      item.appendChild(x);
+      lista.appendChild(item);
+    });
+  }
+
+  /* ---------- modal ---------- */
+  let aoConfirmar = null;
+  function perguntar(titulo, texto, rotuloOk, ok){
+    $('#modal-titulo').textContent = titulo;
+    $('#modal-texto').textContent = texto;
+    $('#modal-ok').textContent = rotuloOk || 'Confirmar';
+    aoConfirmar = ok || null;
+    $('#modal').hidden = false;
+  }
+  function fecharModal(){ $('#modal').hidden = true; aoConfirmar = null; }
+  $('#modal-ok').addEventListener('click', function(){
+    const f = aoConfirmar; fecharModal(); if(f) f();
+  });
+  $('#modal-cancelar').addEventListener('click', fecharModal);
+  $('#modal').addEventListener('click', function(e){ if(e.target === $('#modal')) fecharModal(); });
+
+  /* ---------- tela: início ---------- */
+  $('#nome1').value = S.nomes[0] || '';
+  $('#nome2').value = S.nomes[1] || '';
+  $('#nome1').addEventListener('input', function(e){ S.nomes[0] = e.target.value; salvar(); });
+  $('#nome2').addEventListener('input', function(e){ S.nomes[1] = e.target.value; salvar(); });
+  $('#qtd-fav').textContent = S.favoritas.length;
+
+  $('#ir-conexao').addEventListener('click', function(){ vib(); abrirClima('conexao'); });
+  $('#ir-vod').addEventListener('click', function(){ vib(); abrirClima('vod'); });
+  $('#ir-favoritas').addEventListener('click', function(){ vib(); pintarFavoritas(); mostrar('tela-favoritas'); });
+
+  $$('[data-voltar]').forEach(function(b){
+    b.addEventListener('click', function(){ vib(); mostrar(b.getAttribute('data-voltar')); });
+  });
+
+  /* ---------- tela: clima ---------- */
+  function abrirClima(modo){
+    S.modo = modo;
+    salvar();
+    $('#clima-titulo').textContent = modo === 'conexao' ? 'Qual é o clima de hoje?' : 'Clima do Verdade ou Desafio';
+    pintarChips();
+    pintarQuemComeca();
+    mostrar('tela-clima');
+  }
+
+  function pintarChips(){
+    $$('.chip').forEach(function(c){
+      c.setAttribute('aria-pressed', S.niveis.indexOf(c.getAttribute('data-nivel')) >= 0 ? 'true' : 'false');
+    });
+  }
+  function pintarQuemComeca(){ $('#quem-comeca').textContent = nome(S.comeca); }
+
+  $$('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      const nivel = chip.getAttribute('data-nivel');
+      const ligado = S.niveis.indexOf(nivel) >= 0;
+      vib();
+      if(!ligado && nivel === 'picante' && !S.picanteOk){
+        perguntar(
+          'Ligar o modo picante? 🔥',
+          'As cartas picantes falam de desejo e provocação. Liguem só se os dois estiverem a fim — e sempre dá pra pular qualquer carta.',
+          'Estamos a fim',
+          function(){ S.picanteOk = true; S.niveis.push('picante'); salvar(); pintarChips(); }
+        );
+        return;
+      }
+      if(ligado) S.niveis = S.niveis.filter(function(n){ return n !== nivel; });
+      else S.niveis.push(nivel);
+      salvar();
+      pintarChips();
+    });
+  });
+
+  $('#trocar-comeca').addEventListener('click', function(){
+    S.comeca = 1 - S.comeca; salvar(); vib(); pintarQuemComeca();
+  });
+
+  $('#comecar').addEventListener('click', function(){
+    if(!S.niveis.length){
+      perguntar('Falta escolher o clima', 'Selecione pelo menos um clima para as cartas: leve, íntimo ou picante.', 'Entendi', null);
+      return;
+    }
+    vib(20);
+    S.vez = S.comeca;
+    salvar();
+    if(S.modo === 'conexao'){ mostrar('tela-cartas'); proximaConexao(true); }
+    else { mostrar('tela-vod'); prepararVod(); }
+  });
+
+  /* ---------- tela: cartas de conexão ---------- */
+  let cartaConexao = null;
+
+  function proximaConexao(primeira, mesmaPessoa){
+    if(mesmaPessoa) S.vez = 1 - S.vez;
+    const carta = puxar('conexao');
+    if(!carta){ irParaFim('conexao'); return; }
+    cartaConexao = carta;
+
+    $('#cartas-quem').textContent = nome(S.vez);
+    const texto = $('#carta-texto');
+    texto.textContent = comNome(carta.texto, S.vez);
+    const et = $('#carta-nivel');
+    et.textContent = ROTULO[carta.nivel];
+    et.className = 'etiqueta ' + carta.nivel;
+
+    const cartaEl = $('#carta-conexao');
+    cartaEl.classList.remove('entrando');
+    void cartaEl.offsetWidth;
+    if(!primeira) cartaEl.classList.add('entrando');
+
+    $('#fav-conexao').textContent = ehFav(carta) ? '♥ Salva' : '♥ Salvar';
+    const c = contagem('conexao');
+    $('#contador-conexao').textContent = 'carta ' + c.atual + ' de ' + c.total;
+
+    S.vez = 1 - S.vez;
+    salvar();
+  }
+
+  $('#proxima-conexao').addEventListener('click', function(){ vib(); proximaConexao(false, false); });
+  $('#pular-conexao').addEventListener('click', function(){ vib(); proximaConexao(false, true); });
+  $('#fav-conexao').addEventListener('click', function(){ alternarFav(cartaConexao, $('#fav-conexao')); });
+
+  /* ---------- tela: verdade ou desafio ---------- */
+  let cartaVod = null;
+
+  function pintarPlacar(){
+    $('#placar-1').textContent = nome(0);
+    $('#placar-2').textContent = nome(1);
+    $('#placar-n1').textContent = S.placar[0];
+    $('#placar-n2').textContent = S.placar[1];
+  }
+
+  function prepararVod(){
+    cartaVod = null;
+    pintarPlacar();
+    $('#vod-quem').textContent = nome(S.vez);
+    $('#vod-info').textContent = 'escolhe: verdade ou desafio?';
+    $('#vod-etiqueta').hidden = true;
+    $('#vod-texto').textContent = 'Toque em uma das opções abaixo 👇';
+    $('#vod-escolha').hidden = false;
+    $('#vod-resultado').hidden = true;
+    $('#contador-vod').textContent = '';
+  }
+
+  function sortearVod(tipo){
+    const carta = puxar(tipo);
+    if(!carta){ irParaFim(tipo); return; }
+    cartaVod = carta;
+
+    $('#vod-info').textContent = tipo === 'verdade' ? 'tem que responder' : 'tem que fazer';
+    const et = $('#vod-etiqueta');
+    et.hidden = false;
+    et.textContent = ROTULO[tipo] + ' · ' + ROTULO[carta.nivel];
+    et.className = 'etiqueta ' + carta.nivel;
+    $('#vod-texto').textContent = comNome(carta.texto, S.vez);
+
+    const cartaEl = $('#carta-vod');
+    cartaEl.classList.remove('entrando');
+    void cartaEl.offsetWidth;
+    cartaEl.classList.add('entrando');
+
+    $('#fav-vod').textContent = ehFav(carta) ? '♥ Salva' : '♥ Salvar';
+    $('#vod-cumpriu').textContent = tipo === 'verdade' ? 'Respondi! Passa a vez' : 'Cumpri! Passa a vez';
+    $('#vod-escolha').hidden = true;
+    $('#vod-resultado').hidden = false;
+    const c = contagem(tipo);
+    $('#contador-vod').textContent = ROTULO[tipo].toLowerCase() + ': ' + c.atual + ' de ' + c.total;
+  }
+
+  $$('#vod-escolha [data-tipo]').forEach(function(b){
+    b.addEventListener('click', function(){ vib(); sortearVod(b.getAttribute('data-tipo')); });
+  });
+  $('#vod-sorteio').addEventListener('click', function(){
+    vib(); sortearVod(Math.random() < 0.5 ? 'verdade' : 'desafio');
+  });
+  $('#fav-vod').addEventListener('click', function(){ alternarFav(cartaVod, $('#fav-vod')); });
+  $('#vod-cumpriu').addEventListener('click', function(){
+    vib(20);
+    S.placar[S.vez]++;
+    S.vez = 1 - S.vez;
+    salvar();
+    prepararVod();
+  });
+  $('#vod-passou').addEventListener('click', function(){
+    vib();
+    S.vez = 1 - S.vez;
+    salvar();
+    prepararVod();
+  });
+  $('#zerar-placar').addEventListener('click', function(){
+    perguntar('Zerar o placar?', 'Os pontos de vocês dois voltam para zero.', 'Zerar', function(){
+      S.placar = [0,0]; salvar(); pintarPlacar();
+    });
+  });
+
+  /* ---------- tela: fim do baralho ---------- */
+  let tipoDoFim = 'conexao';
+  function irParaFim(tipo){
+    tipoDoFim = tipo;
+    const c = contagem(tipo);
+    $('#fim-texto').textContent = 'Vocês passaram pelas ' + c.total + ' cartas desse clima. Dá pra embaralhar tudo de novo ou mudar o clima da noite.';
+    mostrar('tela-fim');
+  }
+  $('#fim-reembaralhar').addEventListener('click', function(){
+    vib();
+    reembaralhar(tipoDoFim);
+    if(S.modo === 'conexao'){ mostrar('tela-cartas'); proximaConexao(true); }
+    else { mostrar('tela-vod'); prepararVod(); }
+  });
+  $('#fim-clima').addEventListener('click', function(){ vib(); abrirClima(S.modo); });
+
+  /* ---------- início ---------- */
+  mostrar('tela-inicio');
+
+  /* atalho de teclado no desktop, útil pra testar */
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'ArrowRight') return;
+    if(!$('#tela-cartas').hidden) proximaConexao(false, false);
+  });
+})();
+</script>
+</body>
+</html>
