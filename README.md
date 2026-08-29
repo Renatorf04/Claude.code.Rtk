@@ -9,17 +9,23 @@ sem servidor. O que vocês responderem não sai do aparelho.
 
 ## O que tem dentro
 
-**260 cartas**, escritas em português, divididas em dois modos e três climas:
+**326 cartas**, escritas em português, divididas em dois modos e quatro climas:
 
-| Modo | Leve 🌤️ | Íntimo 🕯️ | Picante 🔥 |
-|---|---|---|---|
-| Cartas de Conexão | 40 | 40 | 30 |
-| Verdade | 25 | 25 | 25 |
-| Desafio | 25 | 25 | 25 |
+| Modo | Leve 🌤️ | Íntimo 🕯️ | Picante 🔥 | Sem filtro 🔥🔥 |
+|---|---|---|---|---|
+| Cartas de Conexão | 35 | 45 | 35 | 35 |
+| Verdade | 22 | 22 | 22 | 22 |
+| Desafio | 22 | 22 | 22 | 22 |
+
+Nada de pergunta de trivia: as cartas pedem uma cena, uma confissão ou um pedido —
+não uma opinião. Em vez de "o que você gosta em mim", coisas como *"em que momento
+recente você se sentiu sozinho(a) do meu lado?"*.
 
 - **Cartas de Conexão** — perguntas para conversar de verdade. O jogo alterna quem responde.
 - **Verdade ou Desafio** — cada um escolhe (ou sorteia), com placar simples.
-- **Clima** — dá para combinar os três. O picante começa **desligado** e só liga com confirmação.
+- **Clima** — dá para combinar os quatro. **Picante** e **Sem filtro** começam
+  **desligados** e cada um pede uma confirmação antes de entrar no baralho.
+- **Sem filtro (18+)** — explícito e direto, para os dois adultos e a portas fechadas.
 - **♥ Salvar** — guarda as cartas que valeram a pena para reler depois.
 - **Sem repetição** — o baralho é embaralhado e nenhuma carta se repete até acabar. O progresso fica salvo mesmo se fechar o app.
 
@@ -49,7 +55,8 @@ sem servidor. O que vocês responderem não sai do aparelho.
 ## Como mudar ou acrescentar cartas
 
 Abra o `index.html` em qualquer editor de texto e procure por `const CARTAS`.
-As frases estão em listas simples, separadas por modo e clima:
+As frases estão em listas simples, separadas por modo e clima
+(`leve`, `intimo`, `picante`, `semfiltro`):
 
 ```js
 conexao: {
@@ -66,5 +73,11 @@ Depois de editar, é só salvar o arquivo e abrir de novo no celular.
 
 ## Dados guardados
 
-Nomes, placar, cartas salvas e o progresso do baralho ficam no `localStorage` do próprio
-navegador do celular. Para zerar tudo, basta limpar os dados do site no navegador.
+Nomes, placar, cartas salvas, os climas liberados e o progresso do baralho ficam no
+`localStorage` do próprio navegador do celular. Para zerar tudo, basta limpar os dados
+do site no navegador.
+
+## Combinado antes de jogar
+
+Passar é sempre permitido, em qualquer clima. Nos climas 🔥 e 🔥🔥 vale a regra simples:
+o limite de um vale pelos dois.
